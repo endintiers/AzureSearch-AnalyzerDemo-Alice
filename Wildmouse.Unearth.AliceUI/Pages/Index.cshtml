@@ -1,0 +1,88 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Alice Home";
+}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <br />
+            <form method="POST" id="searchForm">
+                <br />
+                <div class="input-group">
+                    <input type="text" id="queryText"
+                            asp-for="QueryText"
+                            class="form-control"
+                            autocomplete="off"
+                            placeholder="Try 'Alice', then 'Thinking', then 'Knife', then 'Knives'...interesting...">
+                    <span class="input-group-btn">
+                        <button id="queryButton" class="btn btn-primary"
+                            data-loading-text="Searching..."
+                            data-animation="" type="submit">Search</button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <br />
+            <span id="msg" class="text-danger">@Model.SearchResult.Msg</span>
+        </div>
+    </div>
+
+    <div class="row @Model.ResultsClass">
+        <div class="col-lg-4 col-sm-4">
+            <div class="clearfix"></div>
+            <div id="standardLucene">
+                <h2>Standard Lucene</h2>
+                <span>@Model.SearchResult.StandardLuceneHighLights.Count hits</span>
+                <br />
+                <table class='table'>
+                    <tbody>
+                        @foreach (var highLight in Model.SearchResult.StandardLuceneHighLights)
+                        {
+                            <tr><td>@Html.Raw(highLight)</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-4">
+            <div class="clearfix"></div>
+            <div id="englishLucene">
+                <h2>English Lucene</h2>
+                <span>@Model.SearchResult.EnglishLuceneHighLights.Count hits</span>
+                <br />
+                <table class='table'>
+                    <tbody>
+                        @foreach (var highLight in Model.SearchResult.EnglishLuceneHighLights)
+                        {
+                            <tr><td>@Html.Raw(highLight)</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-4">
+            <div class="clearfix"></div>
+            <div id="englishMicrosoft">
+                <h2>English Microsoft</h2>
+                <span>@Model.SearchResult.EnglishMicrosoftHighLights.Count hits</span>
+                <br />
+                <table class='table'>
+                    <tbody>
+                        @foreach (var highLight in Model.SearchResult.EnglishMicrosoftHighLights)
+                        {
+                            <tr><td>@Html.Raw(highLight)</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div> 
