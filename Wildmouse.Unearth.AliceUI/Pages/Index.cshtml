@@ -34,55 +34,29 @@
         </div>
     </div>
 
-    <div class="row @Model.ResultsClass">
-        <div class="col-lg-4 col-sm-4">
-            <div class="clearfix"></div>
-            <div id="standardLucene">
-                <h2>Standard Lucene</h2>
-                <span>@Model.SearchResult.StandardLuceneHighLights.Count hits</span>
-                <br />
-                <table class='table'>
-                    <tbody>
-                        @foreach (var highLight in Model.SearchResult.StandardLuceneHighLights)
-                        {
-                            <tr><td>@Html.Raw(highLight)</td></tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+    @if (Model.SearchResult.FieldResults != null)
+    {
+        <div class="row">
+            @foreach (var fieldResult in Model.SearchResult.FieldResults)
+            {
+                <div class="col-lg-4 col-sm-4">
+                    <div class="clearfix"></div>
+                    <div>
+                        <h2>@fieldResult.Key</h2>
+                        <span>@fieldResult.Value.Count hits</span>
+                        <br />
+                        <table class='table'>
+                            <tbody>
+                                @foreach (var highLight in fieldResult.Value)
+                                {
+                                    <tr><td>@Html.Raw(highLight)</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
         </div>
-        <div class="col-lg-4 col-sm-4">
-            <div class="clearfix"></div>
-            <div id="englishLucene">
-                <h2>English Lucene</h2>
-                <span>@Model.SearchResult.EnglishLuceneHighLights.Count hits</span>
-                <br />
-                <table class='table'>
-                    <tbody>
-                        @foreach (var highLight in Model.SearchResult.EnglishLuceneHighLights)
-                        {
-                            <tr><td>@Html.Raw(highLight)</td></tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="col-lg-4 col-sm-4">
-            <div class="clearfix"></div>
-            <div id="englishMicrosoft">
-                <h2>English Microsoft</h2>
-                <span>@Model.SearchResult.EnglishMicrosoftHighLights.Count hits</span>
-                <br />
-                <table class='table'>
-                    <tbody>
-                        @foreach (var highLight in Model.SearchResult.EnglishMicrosoftHighLights)
-                        {
-                            <tr><td>@Html.Raw(highLight)</td></tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    }
 
 </div> 

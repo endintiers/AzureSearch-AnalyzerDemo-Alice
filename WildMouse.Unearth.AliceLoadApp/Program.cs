@@ -66,7 +66,7 @@ namespace WildMouse.Unearth.AliceLoadApp
         static void AddSentencesToIndex(string[] sentences)
         {
             var indexClient = _searchClient.Indexes.GetClient(_indexName);
-        var docActions = new List<IndexAction<AliceDocument>>();
+            var docActions = new List<IndexAction<AliceDocument>>();
             for(int i=0; i<sentences.Length; i++)
             {
                 var doc = new AliceDocument()

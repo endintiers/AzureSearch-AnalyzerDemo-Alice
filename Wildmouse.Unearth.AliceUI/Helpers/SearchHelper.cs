@@ -15,7 +15,11 @@ namespace Wildmouse.Unearth.AliceUI.Helpers
         private static string _searchServiceName = "insummary";
         private static string _queryKey = "CEFF77C8B4316EF9C2934EE6AB734E12";
         private static string _indexName = "alice-index";
-        private static string[] _fieldNames = new string[] { "standardText", "englishText", "microsoftText" };
+        private static Dictionary<string, string> _fieldNames
+            = new Dictionary<string, string>() {
+            { "Standard Lucene", "standardText" },
+            { "English Lucene", "englishText"},
+            { "English Microsoft", "microsoftText"}};
 
         public static string ConstructorErrorMessage { get; set; }
 
@@ -34,64 +38,57 @@ namespace Wildmouse.Unearth.AliceUI.Helpers
 
         public static AliceSearchResult Search(string query)
         {
-            DocumentSearchResult dsr = null;
             AliceSearchResult result = new AliceSearchResult()
             {
                 Msg = string.Empty,
-                StandardLuceneHighLights = new List<string>(),
-                EnglishLuceneHighLights = new List<string>(),
-                EnglishMicrosoftHighLights = new List<string>()
+                FieldResults = new Dictionary<string, List<string>>()
             };
+
             try
             {
-                SearchParameters sp = new SearchParameters()
+                // One field-scoped search for each field
+                foreach (var field in _fieldNames)
                 {
-                    QueryType = QueryType.Simple,
-                    SearchMode = SearchMode.Any,
-                    IncludeTotalResultCount = true,
-                    HighlightFields = _fieldNames.ToList(),
-                    HighlightPreTag = "<mark><b><i>",
-                    HighlightPostTag = "</i></b></mark>",
-                    Top = 1000
-                };
-                // Do the search
-                dsr = _aliceIndexClient.Documents.Search(query, sp);
-                if (dsr != null && dsr.Count > 0)
-                {
-                    result = ConvertDocSRToAliceSR(dsr);
-                }
-                else
-                {
-                    result.Msg = "No Search results returned";
+                    var searchResult = SearchIndexField(query, field.Value);
+                    result.FieldResults.Add(field.Key, searchResult);
                 }
             }
             catch (Exception ex)
             {
-                var msg = string.Format("Exception in Search: {0}", ex.Message.ToString());
+                var msg = string.Format("Exception in Alice Search: {0}", ex.Message.ToString());
                 result.Msg = msg;
                 Trace.TraceError(msg);
             }
             return result;
         }
 
-        private static AliceSearchResult ConvertDocSRToAliceSR(DocumentSearchResult dsr)
+        private static List<string> SearchIndexField(string query, string fieldName)
         {
-            var result = new AliceSearchResult()
+            var result = new List<string>();
+            SearchParameters sp = new SearchParameters()
             {
-                Msg = string.Empty,
-                StandardLuceneHighLights = new List<string>(),
-                EnglishLuceneHighLights = new List<string>(),
-                EnglishMicrosoftHighLights = new List<string>()
+                QueryType = QueryType.Full,
+                SearchMode = SearchMode.Any,
+                HighlightFields = new List<string> { fieldName },
+                HighlightPreTag = "<mark><b><i>",
+                HighlightPostTag = "</i></b></mark>",
+                Top = 1000
             };
 
-            foreach (var sr in dsr.Results)
+            // Do a field-scoped search
+            var fieldScopedQuery = fieldName + ":" + query;
+            var dsr = _aliceIndexClient.Documents.Search(fieldScopedQuery, sp);
+
+            // Extract the highlights
+            if (dsr != null && dsr.Results != null)
             {
-                if (sr.Highlights.ContainsKey(_fieldNames[0]))
-                    result.StandardLuceneHighLights.AddRange(sr.Highlights[_fieldNames[0]]);
-                if (sr.Highlights.ContainsKey(_fieldNames[1]))
-                    result.EnglishLuceneHighLights.AddRange(sr.Highlights[_fieldNames[1]]);
-                if (sr.Highlights.ContainsKey(_fieldNames[2]))
-                    result.EnglishMicrosoftHighLights.AddRange(sr.Highlights[_fieldNames[2]]);
+                foreach (var sr in dsr.Results)
+                {
+                    if (sr.Highlights != null)
+                    {
+                        result.AddRange(sr.Highlights[fieldName]);
+                    }
+                }
             }
             return result;
         }
