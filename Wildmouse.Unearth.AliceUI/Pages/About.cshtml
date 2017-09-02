@@ -1,9 +1,163 @@
 ﻿@page
 @model AboutModel
 @{
-    ViewData["Title"] = "About";
+    ViewData["Title"] = "About Alice";
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@Model.Message</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-7 col-sm-6">
+            <div class="clearfix"></div>
+            <h2>@ViewData["Title"]</h2>
+            <p>
+                This demo aims to illustrate the different analyzers available in <a target="_blank" href="https://azure.microsoft.com/en-us/services/search/">Azure Search</a>
+                and by extension in our <a target="_blank" href="http://unearth.ai">Unearth</a> product.
+                You can find <a target="_blank" href="https://github.com/endintiers/AzureSearch-AnalyzerDemo-Alice">
+                the source code for this demo and the code that created the underlying index in github</a>.
+                Comments, corrections and questions are welcome there.
+            </p>
+            <p>
+                This is an ASP.NET Core 2 application using Razor Pages and field-scoped Azure Search.
+                It's a fun read (for a programmer). <i><b>Hint: put your cursor over the purple word 'magic' below</b></i>.
+                The index contains 3 copies of the text of Lewis Carroll's book 'Alice in Wonderland', each 
+                copy indexed with a different Analyzer.
+            </p>
+            <h3>Azure Search Analyzers</h3>
+            <p>
+                Analyzers convert text into tokens. When indexing documents the tokens are created and stored
+                in indexes as n-grams. When a query is made against an index on a field the query text is
+                converted into tokens by the same analyzer and used to look up that index.
+                It can get a bit more complex than that but that’s basically what happens.
+            </p>
 
-<p>Use this area to provide additional information.</p>
+            <p>
+                There are three standard analyzer types. We can also create custom analyzers for specific field types
+                or custom implementations.
+            </p>
+
+            <p>
+                <b>Standard Lucene:</b> breaks text into tokens following the Unicode Consortium text segmentation rules,
+                then converts all characters to their lower-case form. We use this for data fields in formal documents.
+            </p>
+
+            <p>
+                <b>Language-specific Lucene:</b> extends the standard analyzers adding language-specific transforms,
+                usually including stemming. Azure Search currently provides 35 language-specific analyzers.
+                The English Lucene analyser removes possessives (trailing 's) from words,
+                applies stemming as per Porter Stemming algorithm, and removes English stop words.
+            </p>
+
+            <p>
+                <b>Language-specific Microsoft:</b> performs lemmatization instead of stemming to find the base form of words
+                in the target language (the lemma). Azure Search provides 50 language-specific analyzers originally
+                developed for Microsoft Office and Bing. These use Natural Language Processing (NLP) tools to create
+                ‘better’ tokens. Lemmatizing involves the use of a
+                dictionary/vocabulary and morphological analysis (parts of speech and context) of words.
+                It does more work so indexing takes longer than a stemming analyser,
+                but with Azure Search we have effectively unlimited computational resources so in <a target="_blank" href="http://unearth.ai">Unearth</a>
+                we use the Microsoft language-specific analyzers for all fields that contain human language.
+            </p>
+
+            <p>
+                <b>Custom Analyzers:</b>
+                We can use these to do<span class="unicorn" style="color: blueviolet">
+                    <span>m</span><span>a</span><span>g</span><span>i</span><span>c</span>
+                </span>. For example we can use a custom analyzer to implement a thesaurus
+                to extend searches for certain words to include synonyms. We may extend
+                this demo to include a custom analyzer at a later date.
+            </p>
+
+            <p>
+                The demo shows the difference between the 3 different standard analyser types in Azure Search.
+            </p>
+            <h3>Searching ‘Alice in Wonderland’</h3>
+            <table>
+                <caption style="text-align:left">For ‘alice’:</caption>
+                <tr>
+                    <td><span class="text-nowrap"><b>Standard Lucene:</b>&nbsp;</span></td>
+                    <td><span class="badge">377 hits</span>&nbsp;</td>
+                    <td>- fails to find possessives (alice’s).</td>
+                </tr>
+                <tr>
+                    <td><span class="text-nowrap"><b>English Lucene:</b>&nbsp;</span></td>
+                    <td><span class="badge">387 hits</span>&nbsp;</td>
+                    <td>- stems to ‘alic’, removes possessives and searches for ‘alic’.</td>
+                </tr>
+                <tr>
+                    <td><span class="text-nowrap"><b>English Microsoft:</b>&nbsp;</span></td>
+                    <td><span class="badge">387 hits</span>&nbsp;</td>
+                    <td>- knows ‘alice’ is a noun, removes possessives, searches for ‘alice’.</td>
+                </tr>
+            </table>
+            <br />
+            <table>
+                <caption style="text-align:left">For ‘thinking’:</caption>
+                <tr>
+                    <td><span class="text-nowrap"><b>Standard Lucene:</b>&nbsp;</span></td>
+                    <td><span class="badge">&nbsp;11 hits</span>&nbsp;</td>
+                    <td>- just looks for ‘thinking’.</td>
+                </tr>
+                <tr>
+                    <td><span class="text-nowrap"><b>English Lucene:</b>&nbsp;</span></td>
+                    <td><span class="badge">&nbsp;64 hits</span>&nbsp;</td>
+                    <td>- stems to ‘think’ and searches for ‘think’. Finds ‘thinking’, ‘thinks’, ‘think!’.</td>
+                </tr>
+                <tr>
+                    <td><span class="text-nowrap"><b>English Microsoft:</b>&nbsp;</span></td>
+                    <td><span class="badge">136 hits</span>&nbsp;</td>
+                    <td>- knows ‘thinking’ may be an adjective or a noun, knows it’s closely related synonyms in each of its usages. Finds ‘think’, 'think!', 'thinks', ‘thinking’ and ‘thought’.</td>
+                </tr>
+            </table>
+            <table>
+                <caption style="text-align:left">For ‘knives’:</caption>
+                <tr>
+                    <td><span class="text-nowrap"><b>Standard Lucene:</b>&nbsp;</span></td>
+                    <td><span class="badge">&nbsp;0 hits</span>&nbsp;</td>
+                    <td>- just looks for ‘knives’ which is not a word in the text.</td>
+                </tr>
+                <tr>
+                    <td><span class="text-nowrap"><b>English Lucene:</b>&nbsp;</span></td>
+                    <td><span class="badge">&nbsp;0 hits</span>&nbsp;</td>
+                    <td>- stems to ‘kniv’ and searches for ‘kniv’. Doesn't find anything.</td>
+                </tr>
+                <tr>
+                    <td><span class="text-nowrap"><b>English Microsoft:</b>&nbsp;</span></td>
+                    <td><span class="badge">3 hits</span>&nbsp;</td>
+                    <td>- knows ‘knives’ is the plural of 'knife'. Finds ‘knife’.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-lg-4 col-lg-offset-1 col-sm-6">
+            <div class="col-xs-12" style="height:50px;"></div>
+            <img class="img-responsive" src="~/images/drinkme-lrg.jpg" alt="">
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script>
+
+        $(document).ready(function () {
+
+            var animTime = 6, // time for the animation in seconds
+                hueChange = 3, // the hue change from one span element to the next
+                prefixes = ["", "-webkit-", "-moz-", "-o-"],
+                numPrefixes = prefixes.length;
+
+            $('.unicorn').find('span').each(function (i) {
+                for (var j = 0; j < numPrefixes; j++) {
+                    $(this).css(prefixes[j] + 'animation-delay', (animTime * ((i * hueChange) % 360) / 360) - animTime + 's');
+                }
+            });
+
+            // needed to avoid Chrome bug:
+            $('.unicorn').one('mouseover', function () {
+                $(this).addClass('animate');
+            });
+
+        });
+
+    </script>
+}
+
+

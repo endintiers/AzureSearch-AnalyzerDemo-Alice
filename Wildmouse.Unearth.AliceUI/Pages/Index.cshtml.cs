@@ -17,7 +17,7 @@ namespace Wildmouse.Unearth.AliceUI.Pages
         {
             SearchResult = new AliceSearchResult()
             {
-                Msg = "Demonstrates different types of search analyzer",
+                Msg = string.Empty,
                 FieldResults = null
             };
         }

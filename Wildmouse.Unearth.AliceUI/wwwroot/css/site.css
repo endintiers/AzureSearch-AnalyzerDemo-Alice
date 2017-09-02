@@ -21,3 +21,63 @@ table td {
     display: table-cell;
     vertical-align: top;
 }
+
+
+.unicorn.animate span {
+    -webkit-animation: colorRotate 6s linear 0s infinite;
+    -moz-animation: colorRotate 6s linear 0s infinite;
+    -o-animation: colorRotate 6s linear 0s infinite;
+    animation: colorRotate 6s linear 0s infinite;
+    -webkit-animation-play-state: paused;
+    -moz-animation-play-state: paused;
+    -o-animation-play-state: paused;
+    animation-play-state: paused;
+}
+
+.unicorn:hover span {
+    -webkit-animation-play-state: running;
+    -moz-animation-play-state: running;
+    -o-animation-play-state: running;
+    animation-play-state: running;
+}
+
+@-webkit-keyframes colorRotate {
+    from { color: rgb(255, 0, 0);}
+    16.6% {color: rgb(255, 0, 255);}
+    33.3% {color: rgb(0, 0, 255);}
+    50% {color: rgb(0, 255, 255);}
+    66.6% {color: rgb(0, 255, 0);}
+    83.3% {color: rgb(255, 255, 0);}
+    to {color: rgb(255, 0, 0);}
+}
+
+@-moz-keyframes colorRotate {
+    from {color: rgb(255, 0, 0);}
+    16.6% {color: rgb(255, 0, 255);}
+    33.3% {color: rgb(0, 0, 255);}
+    50% {color: rgb(0, 255, 255);}
+    66.6% {color: rgb(0, 255, 0);}
+    83.3% {color: rgb(255, 255, 0);}
+    to {color: rgb(255, 0, 0);}
+}
+
+@-o-keyframes colorRotate {
+    from {color: rgb(255, 0, 0);}
+    16.6% {color: rgb(255, 0, 255);}
+    33.3% {color: rgb(0, 0, 255);}
+    50% {color: rgb(0, 255, 255);}
+    66.6% {color: rgb(0, 255, 0);}
+    83.3% {color: rgb(255, 255, 0);}
+    to {color: rgb(255, 0, 0);}
+}
+
+@keyframes colorRotate {
+    from {color: rgb(255, 0, 0);}
+    16.6% {color: rgb(255, 0, 255);}
+    33.3% {color: rgb(0, 0, 255);}
+    50% {color: rgb(0, 255, 255);}
+    66.6% {color: rgb(0, 255, 0);}
+    83.3% {color: rgb(255, 255, 0);}
+    to {color: rgb(255, 0, 0);}
+}
+

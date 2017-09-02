@@ -8,7 +8,6 @@
 
     <div class="row">
         <div class="col-lg-12 col-sm-12">
-            <br />
             <form method="POST" id="searchForm">
                 <br />
                 <div class="input-group">
@@ -16,7 +15,7 @@
                             asp-for="QueryText"
                             class="form-control"
                             autocomplete="off"
-                            placeholder="Try 'Alice', then 'Thinking', then 'Knife', then 'Knives'...interesting...">
+                            placeholder="Try 'Alice', then 'Thinking', then 'Knives'...interesting...">
                     <span class="input-group-btn">
                         <button id="queryButton" class="btn btn-primary"
                             data-loading-text="Searching..."
@@ -29,7 +28,6 @@
 
     <div class="row">
         <div class="col-lg-12 col-sm-12">
-            <br />
             <span id="msg" class="text-danger">@Model.SearchResult.Msg</span>
         </div>
     </div>
@@ -43,7 +41,7 @@
                     <div class="clearfix"></div>
                     <div>
                         <h2>@fieldResult.Key</h2>
-                        <span>@fieldResult.Value.Count hits</span>
+                        <div><span class="badge">@fieldResult.Value.Count hits</span></div>
                         <br />
                         <table class='table'>
                             <tbody>
