@@ -13,8 +13,8 @@ namespace Wildmouse.Unearth.AliceUI.Helpers
         private static SearchServiceClient _searchClient; 
         private static ISearchIndexClient _aliceIndexClient;
         //TODO: Change the search service name and query key if BYO index
-        private static string _searchServiceName = "unearthdemo";
-        private static string _queryKey = "4C38982C5B39BA43CFA64A63173C0C01";
+        private static string _searchServiceName = "REDACTED";
+        private static string _queryKey = "REDACTED";
         private static string _indexName = "alice-index";
         private static Dictionary<string, string> _fieldNames
             = new Dictionary<string, string>() {

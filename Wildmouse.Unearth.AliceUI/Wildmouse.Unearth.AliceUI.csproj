@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <UserSecretsId>ae367671-c6b6-414b-9883-5932b6805ba9</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Properties\PublishProfiles\unearthalice - Web Deploy.pubxml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" />
     <PackageReference Include="Microsoft.Azure.Search" Version="5.0.3" />
   </ItemGroup>
   <ItemGroup>
